@@ -20,25 +20,39 @@ When the user invokes this skill, they will provide a date range (start and end 
    gh pr list --repo Concentro-Inc/api --author @me --state merged --search "merged:START_DATE..END_DATE" --json number,title,mergedAt,url,body --limit 100
    ```
 
-3. **Analyze and group the PRs** by theme/topic:
-   - UI/UX improvements
-   - File Viewer features
-   - Data type or schema changes
-   - Bug fixes
-   - AI features
-   - Performance improvements
-   - Code quality/refactoring
-   - Infrastructure changes
+3. **Analyze and categorize the PRs** into two groups:
 
-4. **Format the output** as Slack-ready text:
-   - Start with "Updates :star2:"
+   **User-facing updates** (product features, UX improvements, user-visible bug fixes):
+   - UI/UX improvements
+   - New features
+   - User-visible bug fixes
+   - Performance improvements users can feel
+   - AI features
+
+   **Developer updates** (tooling, infrastructure, code quality):
+   - ESLint/linting rules
+   - Testing infrastructure
+   - Build/CI/CD changes
+   - Code refactoring that doesn't affect users
+   - Dependency upgrades
+   - Developer tooling (Storybook, knip, etc.)
+   - Monitoring/debugging improvements (Datadog, etc.)
+
+4. **Format the output** as Slack-ready text with TWO sections:
+
+   **Section 1: "Updates :star2:"** (user-facing changes)
    - Use hyphens (-) for each bullet point (Slack auto-converts these to bullets)
    - Use :star2: emoji for features
    - Use :bug: emoji for bug fixes
    - Use :robot_face: emoji for AI-related features
-   - Keep descriptions concise and user-focused (what changed, not how)
+   - Keep descriptions concise and user-focused (what changed, why it matters)
    - Combine related PRs into single bullet points when appropriate
-   - Focus on user-facing changes; group technical/internal changes together
+
+   **Section 2: "Dev updates :technologist:"** (developer/infrastructure changes)
+   - Use hyphens (-) for each bullet point
+   - Group similar items together (e.g., all ESLint changes, all dependency upgrades)
+   - Be specific about what tooling was added/improved
+   - Explain the benefit where relevant (reduces cognitive load, improves debugging, etc.)
 
 5. **Style guidelines**:
    - Write in past tense ("Added X", "Fixed Y", "Updated Z")
@@ -51,13 +65,21 @@ When the user invokes this skill, they will provide a date range (start and end 
 
 ```
 Updates :star2:
-- Dark mode is now live! Removed feature flag and updated all surfaces to support theme switching
-- File Viewer now shows better messaging for processing states and properly displays extracted values
-- Added text data type support for variables (both frontend and backend)
-- Sidebar nav icons are now clickable when collapsed
-- :bug: Fixed scroll area viewport sizing and thread sidebar truncation
-- :robot_face: AI-generated chat titles now appear immediately
-- Code cleanup: Migrated types repo, ran eslint fixes
+- Major routing overhaul: Generated routes from single source of truth dictionary, meaning we should (almost) never have broken links again in the app
+- Consolidated Button components for uniform look and feel of all buttons in the app
+- :bug: Fixed popover/modal z-index conflicts using visibility-based hiding (preserves form state when opening modals from popovers)
+- :bug: Fixed chat messages going missing due to improper cache invalidation
+- :bug: Fixed extractor field ordering being overwritten when updating configs
+- File explorer UX -- clicking on a filename was kind of difficult, i made the surface area larger to click
+
+Dev updates :technologist:
+- :bug: Fixed Datadog sourcemap matching for better error tracking in production
+- Added custom ESLint rules to flag when we're calling things "entity" in the UI
+- Added Storybook for our component design system documentation and visual testing
+- Added knip for dead code detection - helps identify unused files and dependencies, reduce cognitive load
+- Backend: Added dotenv-expand for cleaner env variable management (supports `${VAR}` interpolation)
+- Backend: Added Slack notifier for CI pipeline alerts
+- Upgraded zod to v4, removed Sentry, updated react-router
 ```
 
 ## Usage
