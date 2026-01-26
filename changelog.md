@@ -40,7 +40,8 @@ When the user invokes this skill, they will provide a date range (start and end 
 
 4. **Format the output** as Slack-ready text with TWO sections:
 
-   **Section 1: "Updates :star2:"** (user-facing changes)
+   **Section 1: "Updates :star2: (DATE_RANGE)"** (user-facing changes)
+   - Include the date range in the header (e.g., "Jan 16-26" or "Dec 15-20")
    - Use hyphens (-) for each bullet point (Slack auto-converts these to bullets)
    - Use :star2: emoji for features
    - Use :bug: emoji for bug fixes
@@ -64,7 +65,7 @@ When the user invokes this skill, they will provide a date range (start and end 
 ## Example Output
 
 ```
-Updates :star2:
+Updates :star2: (Jan 16-26)
 - Major routing overhaul: Generated routes from single source of truth dictionary, meaning we should (almost) never have broken links again in the app
 - Consolidated Button components for uniform look and feel of all buttons in the app
 - :bug: Fixed popover/modal z-index conflicts using visibility-based hiding (preserves form state when opening modals from popovers)
