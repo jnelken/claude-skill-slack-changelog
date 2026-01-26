@@ -32,7 +32,7 @@ When the user invokes this skill, they will provide a date range (start and end 
 
 4. **Format the output** as Slack-ready text:
    - Start with "Updates :star2:"
-   - Use bullet points (•) for each item
+   - Use hyphens (-) for each bullet point (Slack auto-converts these to bullets)
    - Use :star2: emoji for features
    - Use :bug: emoji for bug fixes
    - Use :robot_face: emoji for AI-related features
@@ -51,13 +51,13 @@ When the user invokes this skill, they will provide a date range (start and end 
 
 ```
 Updates :star2:
-• Dark mode is now live! Removed feature flag and updated all surfaces to support theme switching
-• File Viewer now shows better messaging for processing states and properly displays extracted values
-• Added text data type support for variables (both frontend and backend)
-• Sidebar nav icons are now clickable when collapsed
-• :bug: Fixed scroll area viewport sizing and thread sidebar truncation
-• :robot_face: AI-generated chat titles now appear immediately
-• Code cleanup: Migrated types repo, ran eslint fixes
+- Dark mode is now live! Removed feature flag and updated all surfaces to support theme switching
+- File Viewer now shows better messaging for processing states and properly displays extracted values
+- Added text data type support for variables (both frontend and backend)
+- Sidebar nav icons are now clickable when collapsed
+- :bug: Fixed scroll area viewport sizing and thread sidebar truncation
+- :robot_face: AI-generated chat titles now appear immediately
+- Code cleanup: Migrated types repo, ran eslint fixes
 ```
 
 ## Usage
