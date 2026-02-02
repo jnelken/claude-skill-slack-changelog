@@ -38,24 +38,27 @@ When the user invokes this skill, they will provide a date range (start and end 
    - Developer tooling (Storybook, knip, etc.)
    - Monitoring/debugging improvements (Datadog, etc.)
 
-4. **Format the output** as Slack-ready text with TWO sections:
+4. **Format the output** as plain text Slack mrkdwn (NO bold, italics, or list formatting) with TWO sections:
 
    **Section 1: "Updates :star2: (DATE_RANGE)"** (user-facing changes)
    - Include the date range in the header (e.g., "Jan 16-26" or "Dec 15-20")
-   - Use hyphens (-) for each bullet point (Slack auto-converts these to bullets)
+   - Use plain newlines to separate each item (no hyphens, no list syntax)
    - Use :star2: emoji for features
    - Use :bug: emoji for bug fixes
    - Use :robot_face: emoji for AI-related features
    - Keep descriptions concise and user-focused (what changed, why it matters)
    - Combine related PRs into single bullet points when appropriate
+   - IMPORTANT: Use plain text only - no markdown bold (*), italics (_), hyphens (-), or other formatting
 
    **Section 2: "Dev updates :technologist:"** (developer/infrastructure changes)
-   - Use hyphens (-) for each bullet point
+   - Use plain newlines to separate each item (no hyphens, no list syntax)
    - Group similar items together (e.g., all ESLint changes, all dependency upgrades)
    - Be specific about what tooling was added/improved
    - Explain the benefit where relevant (reduces cognitive load, improves debugging, etc.)
+   - IMPORTANT: Use plain text only - no markdown formatting or list syntax
 
 5. **Style guidelines**:
+   - Use plain text Slack mrkdwn format only (no bold, italics, or markdown formatting)
    - Write in past tense ("Added X", "Fixed Y", "Updated Z")
    - Be specific but concise
    - Highlight the user benefit when relevant
@@ -66,21 +69,21 @@ When the user invokes this skill, they will provide a date range (start and end 
 
 ```
 Updates :star2: (Jan 16-26)
-- Major routing overhaul: Generated routes from single source of truth dictionary, meaning we should (almost) never have broken links again in the app
-- Consolidated Button components for uniform look and feel of all buttons in the app
-- :bug: Fixed popover/modal z-index conflicts using visibility-based hiding (preserves form state when opening modals from popovers)
-- :bug: Fixed chat messages going missing due to improper cache invalidation
-- :bug: Fixed extractor field ordering being overwritten when updating configs
-- File explorer UX -- clicking on a filename was kind of difficult, i made the surface area larger to click
+Major routing overhaul: Generated routes from single source of truth dictionary, meaning we should (almost) never have broken links again in the app
+Consolidated Button components for uniform look and feel of all buttons in the app
+:bug: Fixed popover/modal z-index conflicts using visibility-based hiding (preserves form state when opening modals from popovers)
+:bug: Fixed chat messages going missing due to improper cache invalidation
+:bug: Fixed extractor field ordering being overwritten when updating configs
+File explorer UX -- clicking on a filename was kind of difficult, i made the surface area larger to click
 
 Dev updates :technologist:
-- :bug: Fixed Datadog sourcemap matching for better error tracking in production
-- Added custom ESLint rules to flag when we're calling things "entity" in the UI
-- Added Storybook for our component design system documentation and visual testing
-- Added knip for dead code detection - helps identify unused files and dependencies, reduce cognitive load
-- Backend: Added dotenv-expand for cleaner env variable management (supports `${VAR}` interpolation)
-- Backend: Added Slack notifier for CI pipeline alerts
-- Upgraded zod to v4, removed Sentry, updated react-router
+:bug: Fixed Datadog sourcemap matching for better error tracking in production
+Added custom ESLint rules to flag when we're calling things "entity" in the UI
+Added Storybook for our component design system documentation and visual testing
+Added knip for dead code detection - helps identify unused files and dependencies, reduce cognitive load
+Backend: Added dotenv-expand for cleaner env variable management (supports `${VAR}` interpolation)
+Backend: Added Slack notifier for CI pipeline alerts
+Upgraded zod to v4, removed Sentry, updated react-router
 ```
 
 ## Usage
