@@ -1,0 +1,12 @@
+{
+  "users": {
+    "jake": "jake@concentro.io",
+    "anna": "anna.lulushi@concentro.io",
+    "tom": "tom.stillwell@concentro.io"
+  },
+  "repos": [
+    "Concentro-Inc/woodrow",
+    "Concentro-Inc/api"
+  ],
+  "slackWebhook": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+}

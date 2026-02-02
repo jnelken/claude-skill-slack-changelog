@@ -10,6 +10,8 @@ This skill fetches merged PRs from your GitHub repositories within a specified d
 - Appropriate emojis (:star2: for features, :bug: for bugs, :robot_face: for AI)
 - Concise, user-focused descriptions
 - Combined related changes for better readability
+- Multi-user support (generate changelogs for your teammates)
+- Optional Slack webhook integration for automatic posting
 
 ## Installation
 
@@ -26,11 +28,35 @@ This skill fetches merged PRs from your GitHub repositories within a specified d
 
 ## Configuration
 
-By default, this skill fetches PRs from:
-- `Concentro-Inc/woodrow`
-- `Concentro-Inc/api`
+### Option 1: Config File (Recommended for Teams)
 
-To use with your own repositories, edit `changelog.md` and update the repo paths in step 2:
+Create a `.changelog-config.json` file in your project root or skill directory:
+
+```json
+{
+  "users": {
+    "jake": "jake@example.com",
+    "anna": "anna@example.com",
+    "tom": "tom@example.com"
+  },
+  "repos": [
+    "your-org/repo1",
+    "your-org/repo2"
+  ],
+  "slackWebhook": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+}
+```
+
+This allows you to:
+- Generate changelogs for any team member by name
+- Configure repositories once for everyone
+- Optionally post directly to Slack
+
+**Note:** You can copy `.changelog-config.example.json` as a starting point. Add `.changelog-config.json` to your `.gitignore` if you want to keep the Slack webhook URL private.
+
+### Option 2: Edit the Skill Directly
+
+If you don't need multi-user support, you can edit `changelog.md` and hardcode your repo paths in step 3:
 ```bash
 gh pr list --repo YOUR-ORG/YOUR-REPO --author @me --state merged --search "merged:START_DATE..END_DATE" --json number,title,mergedAt,url,body --limit 100
 ```
@@ -39,6 +65,7 @@ gh pr list --repo YOUR-ORG/YOUR-REPO --author @me --state merged --search "merge
 
 In Claude Code, invoke the skill with natural language:
 
+### For yourself:
 ```
 Generate changelog from Jan 1 to Jan 8
 ```
@@ -47,20 +74,34 @@ Generate changelog from Jan 1 to Jan 8
 Create a changelog for the last week
 ```
 
+### For teammates (requires config file):
 ```
-Show me what I shipped from December 15 to December 20
+Generate changelog for Anna from Jan 15 to Jan 22
+```
+
+```
+Create a changelog for Tom from the last week
+```
+
+### Post directly to Slack (requires webhook in config):
+```
+Generate changelog for Anna from Jan 1 to Jan 8 and post to Slack
 ```
 
 ## Example Output
 
 ```
-Updates :star2:
-• Dark mode is now live! Removed feature flag and updated all surfaces to support theme switching
-• File Viewer now shows better messaging for processing states and properly displays extracted values
-• Added text data type support for variables (both frontend and backend)
-• :bug: Fixed scroll area viewport sizing and thread sidebar truncation
-• :robot_face: AI-generated chat titles now appear immediately
-• Code cleanup: Migrated types repo, ran eslint fixes
+Updates :star2: (Jan 16-26)
+Dark mode is now live! Removed feature flag and updated all surfaces to support theme switching
+File Viewer now shows better messaging for processing states and properly displays extracted values
+Added text data type support for variables (both frontend and backend)
+:bug: Fixed scroll area viewport sizing and thread sidebar truncation
+:robot_face: AI-generated chat titles now appear immediately
+
+Dev updates :technologist:
+Code cleanup: Migrated types repo, ran eslint fixes
+Added knip for dead code detection - helps identify unused files and dependencies
+Backend: Added Slack notifier for CI pipeline alerts
 ```
 
 ## Requirements

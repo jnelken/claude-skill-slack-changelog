@@ -10,17 +10,26 @@ Generate a Slack-formatted product update from GitHub pull requests merged withi
 
 ## Instructions
 
-When the user invokes this skill, they will provide a date range (start and end dates). Follow these steps:
+When the user invokes this skill, they will provide a date range and optionally a user name. Follow these steps:
 
-1. **Parse the date range**: Extract start_date and end_date in YYYY-MM-DD format
+1. **Parse the input**:
+   - Extract start_date and end_date in YYYY-MM-DD format
+   - Extract user name if provided (e.g., "for Anna", "for Tom") - defaults to current user (@me)
 
-2. **Fetch PRs from both repos**:
+2. **Read the config file**:
+   - Read `.changelog-config.json` from the skill directory or repo root
+   - Get the user's email from the config (e.g., config.users.anna)
+   - Get the list of repos from config.repos
+   - Get the Slack webhook URL from config.slackWebhook (if posting to Slack)
+
+3. **Fetch PRs from all repos**:
+   - Use the email from config or @me as the author
+   - Example for each repo in config:
    ```bash
-   gh pr list --repo Concentro-Inc/woodrow --author @me --state merged --search "merged:START_DATE..END_DATE" --json number,title,mergedAt,url,body --limit 100
-   gh pr list --repo Concentro-Inc/api --author @me --state merged --search "merged:START_DATE..END_DATE" --json number,title,mergedAt,url,body --limit 100
+   gh pr list --repo REPO_NAME --author EMAIL_OR_ME --state merged --search "merged:START_DATE..END_DATE" --json number,title,mergedAt,url,body --limit 100
    ```
 
-3. **Analyze and categorize the PRs** into two groups:
+4. **Analyze and categorize the PRs** into two groups:
 
    **User-facing updates** (product features, UX improvements, user-visible bug fixes):
    - UI/UX improvements
@@ -38,7 +47,7 @@ When the user invokes this skill, they will provide a date range (start and end 
    - Developer tooling (Storybook, knip, etc.)
    - Monitoring/debugging improvements (Datadog, etc.)
 
-4. **Format the output** as plain text Slack mrkdwn (NO bold, italics, or list formatting) with TWO sections:
+5. **Format the output** as plain text Slack mrkdwn (NO bold, italics, or list formatting) with TWO sections:
 
    **Section 1: "Updates :star2: (DATE_RANGE)"** (user-facing changes)
    - Include the date range in the header (e.g., "Jan 16-26" or "Dec 15-20")
@@ -57,13 +66,24 @@ When the user invokes this skill, they will provide a date range (start and end 
    - Explain the benefit where relevant (reduces cognitive load, improves debugging, etc.)
    - IMPORTANT: Use plain text only - no markdown formatting or list syntax
 
-5. **Style guidelines**:
+6. **Style guidelines**:
    - Use plain text Slack mrkdwn format only (no bold, italics, or markdown formatting)
    - Write in past tense ("Added X", "Fixed Y", "Updated Z")
    - Be specific but concise
    - Highlight the user benefit when relevant
    - Group backend/API changes separately or integrate with frontend changes
    - De-emphasize ticket numbers (can include in parentheses if needed)
+
+7. **Post to Slack (optional)**:
+   - If the user requests "post to Slack" or "send to Slack", use the webhook from config
+   - Escape any special characters in the changelog text for JSON
+   - Post using curl:
+   ```bash
+   curl -X POST -H 'Content-type: application/json' \
+     --data "{\"text\":\"CHANGELOG_TEXT_HERE\"}" \
+     SLACK_WEBHOOK_URL
+   ```
+   - Confirm successful posting or show error message
 
 ## Example Output
 
@@ -89,6 +109,8 @@ Upgraded zod to v4, removed Sentry, updated react-router
 ## Usage
 
 Invoke this skill by saying:
-- "Generate changelog from Jan 1 to Jan 8"
-- "Create a changelog for the last week"
+- "Generate changelog from Jan 1 to Jan 8" (uses current user)
+- "Generate changelog for Anna from Jan 15 to Jan 22"
+- "Create a changelog for Tom from the last week"
 - "Show me what I shipped from December 15 to December 20"
+- "Generate changelog for Anna from Jan 1 to Jan 8 and post to Slack"
