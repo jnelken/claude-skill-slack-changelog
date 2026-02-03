@@ -1,8 +1,17 @@
 {
   "users": {
-    "jake": "jake@concentro.io",
-    "anna": "anna.lulushi@concentro.io",
-    "tom": "tom.stillwell@concentro.io"
+    "jake": {
+      "email": "jake@concentro.io",
+      "github": "jnelken"
+    },
+    "anna": {
+      "email": "anna.lulushi@concentro.io",
+      "github": "annalulushi"
+    },
+    "tom": {
+      "email": "tom@concentro.io",
+      "github": "Tom-Stilwell"
+    }
   },
   "repos": [
     "Concentro-Inc/woodrow",

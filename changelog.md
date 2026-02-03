@@ -18,16 +18,23 @@ When the user invokes this skill, they will provide a date range and optionally 
 
 2. **Read the config file**:
    - Read `.changelog-config.json` from the skill directory or repo root
-   - Get the user's email from the config (e.g., config.users.anna)
+   - Get the user's email and GitHub username from config (e.g., config.users.anna.email, config.users.anna.github)
    - Get the list of repos from config.repos
    - Get the Slack webhook URL from config.slackWebhook (if posting to Slack)
 
-3. **Fetch PRs from all repos**:
-   - Use the email from config or @me as the author
-   - Example for each repo in config:
+3. **Fetch both PRs AND direct commits from all repos**:
+
+   **For PRs** (most developers use this workflow):
    ```bash
-   gh pr list --repo REPO_NAME --author EMAIL_OR_ME --state merged --search "merged:START_DATE..END_DATE" --json number,title,mergedAt,url,body --limit 100
+   gh pr list --repo REPO_NAME --state all --search "is:pr is:merged merged:START_DATE..END_DATE" --json number,title,mergedAt,author,url,body --limit 100 | jq '[.[] | select(.author.login == "GITHUB_USERNAME")]'
    ```
+
+   **For direct commits** (some developers commit directly to main):
+   ```bash
+   gh api "/repos/REPO_NAME/commits?since=START_DATET00:00:00Z&until=END_DATET23:59:59Z" --jq '.[] | select(.commit.author.email == "EMAIL") | {sha: .sha[0:7], message: .commit.message, date: .commit.author.date, url: .html_url}'
+   ```
+
+   **Combine both sources** - merge PRs and direct commits, removing duplicates if a commit is part of a PR
 
 4. **Analyze and categorize the PRs** into two groups:
 

@@ -4,8 +4,9 @@ A Claude Code skill that automatically generates Slack-formatted product updates
 
 ## What it does
 
-This skill fetches merged PRs from your GitHub repositories within a specified date range and transforms them into a polished, Slack-ready changelog with:
+This skill fetches both merged PRs and direct commits from your GitHub repositories within a specified date range and transforms them into a polished, Slack-ready changelog with:
 
+- **Dual workflow support**: Captures both PR-based workflows AND direct commits to main
 - Grouped updates by theme (UI/UX, Bug Fixes, AI Features, etc.)
 - Appropriate emojis (:star2: for features, :bug: for bugs, :robot_face: for AI)
 - Concise, user-focused descriptions
@@ -35,9 +36,18 @@ Create a `.changelog-config.json` file in your project root or skill directory:
 ```json
 {
   "users": {
-    "jake": "jake@example.com",
-    "anna": "anna@example.com",
-    "tom": "tom@example.com"
+    "jake": {
+      "email": "jake@example.com",
+      "github": "jakeusername"
+    },
+    "anna": {
+      "email": "anna@example.com",
+      "github": "annausername"
+    },
+    "tom": {
+      "email": "tom@example.com",
+      "github": "tomusername"
+    }
   },
   "repos": [
     "your-org/repo1",
@@ -49,6 +59,7 @@ Create a `.changelog-config.json` file in your project root or skill directory:
 
 This allows you to:
 - Generate changelogs for any team member by name
+- Track both PR-based workflows (using GitHub username) AND direct commits (using email)
 - Configure repositories once for everyone
 - Optionally post directly to Slack
 
@@ -109,6 +120,15 @@ Backend: Added Slack notifier for CI pipeline alerts
 - [Claude Code](https://claude.com/claude-code)
 - [GitHub CLI](https://cli.github.com/) (`gh`) installed and authenticated
 - Access to the repositories you want to generate changelogs from
+
+## How It Works
+
+The skill automatically checks two sources for each user:
+
+1. **Merged Pull Requests**: For developers who use the PR workflow
+2. **Direct Commits to Main**: For developers who commit directly to the main branch
+
+This ensures complete coverage regardless of your team's workflow preferences. Both sources are combined and deduplicated in the final changelog.
 
 ## Customization
 
